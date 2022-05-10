@@ -150,8 +150,8 @@ int main(int argc, const char** argv) {
 	std::ios_base::sync_with_stdio(false); // optimization of stdin
 	/* PRODUCTION */
 ///*
-	LOG_DURATION("Время выполнения");
 	Query Q = argParse(argc, argv);
+	LOG_DURATION("Время выполнения");
 	Q.run();
 	Q.getResult();
 //*/
