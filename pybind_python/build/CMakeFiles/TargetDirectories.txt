@@ -1,0 +1,5 @@
+/home/arthur/Project/mySoft/Cpp/pybind_python/build/CMakeFiles/module_name.dir
+/home/arthur/Project/mySoft/Cpp/pybind_python/build/CMakeFiles/edit_cache.dir
+/home/arthur/Project/mySoft/Cpp/pybind_python/build/CMakeFiles/rebuild_cache.dir
+/home/arthur/Project/mySoft/Cpp/pybind_python/build/pybind11/CMakeFiles/edit_cache.dir
+/home/arthur/Project/mySoft/Cpp/pybind_python/build/pybind11/CMakeFiles/rebuild_cache.dir
