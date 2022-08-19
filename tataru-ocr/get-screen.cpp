@@ -1,6 +1,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XShm.h>
+#include <cstddef>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <opencv4/opencv2/opencv.hpp>
@@ -19,7 +20,7 @@ struct ScreenShot{
 
     display = XOpenDisplay(nullptr);
     root = DefaultRootWindow(display);
-
+    // XMapRaised(display, root);
     XGetWindowAttributes(display, root, &window_attributes);
     screen = window_attributes.screen;
     ximg = XShmCreateImage(display, DefaultVisualOfScreen(screen), DefaultDepthOfScreen(screen), ZPixmap, NULL, &shminfo, width, height);
@@ -43,6 +44,7 @@ struct ScreenShot{
         init = false;
 
     XShmGetImage(display, root, ximg, x, y, 0x00ffffff);
+
     cv_img = cv::Mat(height, width, CV_8UC4, ximg->data);
   }
 
@@ -114,13 +116,31 @@ struct ScreenShot{
 };
 
 
-void screenshot(cv::Mat &img, bool needDemo=false){
+void screenshot(cv::Mat &img, bool needDemo=false) {
   ScreenShot screen(730, 1120, 1100, 250, needDemo); // x, y, resolution of the window to capture
 
-  for(uint i;; ++i){
+  for(uint i;; ++i) {
     double start = clock();
 
     screen(img);
+
+    /* find pixel with certain color in dialog frame
+    cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(20,150));
+    std::cout << color << std::endl;
+    color[0] = 0;
+    color[1] = 0;
+    color[2] = 0;
+    img.at<cv::Vec3b>(cv::Point(20,150)) = color;
+    imshow("Result", img);
+    cv::waitKey();
+    */
+    cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(20,150));
+    if (color[0] != 201 | color[1] != 217 | color[2] != 226) {
+      // img.setTo(cv::Scalar::all(0)); // make all black
+      return;
+    }
+
+
     screen.cleaner(img);
 
     if(!(i & 0b111111)) {

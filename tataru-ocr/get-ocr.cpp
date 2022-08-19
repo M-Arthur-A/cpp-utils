@@ -11,6 +11,7 @@ void OCRfromImg(std::string& outText, cv::Mat &matImg) {
     printf("there is no cv::Mat image!!!!");
     exit(1);
   }
+
   tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
   // Initialize tesseract-ocr with English, without specifying tessdata path
   if (api->Init(NULL, "eng")) {
