@@ -20,11 +20,11 @@ struct ScreenShot{
 
     display = XOpenDisplay(nullptr);
     root = DefaultRootWindow(display);
-    // XMapRaised(display, root);
     XGetWindowAttributes(display, root, &window_attributes);
     screen = window_attributes.screen;
-    ximg = XShmCreateImage(display, DefaultVisualOfScreen(screen), DefaultDepthOfScreen(screen), ZPixmap, NULL, &shminfo, width, height);
 
+    /*
+    ximg = XShmCreateImage(display, DefaultVisualOfScreen(screen), DefaultDepthOfScreen(screen), ZPixmap, NULL, &shminfo, width, height);
     shminfo.shmid = shmget(IPC_PRIVATE, ximg->bytes_per_line * ximg->height, IPC_CREAT|0777);
     shminfo.shmaddr = ximg->data = (char*)shmat(shminfo.shmid, 0, 0);
     shminfo.readOnly = false;
@@ -37,14 +37,21 @@ struct ScreenShot{
     }
 
     init = true;
+    */
+
+    ximg = XGetImage(display, root, x, y, width, height, AllPlanes, ZPixmap);
   }
 
-  void operator() (cv::Mat& cv_img){
+    void operator() (cv::Mat& cv_img){
+    /*
     if(init)
         init = false;
-
     XShmGetImage(display, root, ximg, x, y, 0x00ffffff);
-
+    */
+    int BitsPerPixel = ximg->bits_per_pixel;
+    std::vector<uint8_t> pixels;
+    pixels.resize(width * height * 4);
+    memcpy(&pixels[0], ximg->data, pixels.size());
     cv_img = cv::Mat(height, width, CV_8UC4, ximg->data);
   }
 
@@ -99,8 +106,11 @@ struct ScreenShot{
     // if(!init)
     //   XDestroyImage(ximg);
 
+    XDestroyImage(ximg);
+    /*
     XShmDetach(display, &shminfo);
     shmdt(shminfo.shmaddr);
+    */
     XCloseDisplay(display);
   }
 
@@ -109,10 +119,11 @@ struct ScreenShot{
   XWindowAttributes window_attributes;
   Screen* screen;
   XImage* ximg;
-  XShmSegmentInfo shminfo;
   int x, y, width, height;
-
+  /*
+  XShmSegmentInfo shminfo;
   bool init;
+  */
 };
 
 

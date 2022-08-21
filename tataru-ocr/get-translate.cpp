@@ -52,6 +52,6 @@ void translate(std::string provider, std::string &query, std::string &queryPrevi
 
   prepareQuery(query);
   if (provider == "ggl") {
-    std::cout << gglTranslate(query) << std::endl;
+    std::cout << gglTranslate(query) << '\n'<< std::endl;
   }
 }

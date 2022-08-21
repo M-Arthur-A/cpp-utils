@@ -19,7 +19,7 @@ void OCRfromImg(std::string& outText, cv::Mat &matImg) {
     exit(1);
   }
 
-  api->SetImage(matImg.data, matImg.cols, matImg.rows, 3, matImg.step);
+  api->SetImage(matImg.data, matImg.cols, matImg.rows, 4, matImg.step);
   // Get OCR result
   outText = std::string(api->GetUTF8Text());
 

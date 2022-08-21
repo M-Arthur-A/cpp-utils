@@ -15,6 +15,7 @@ int main() {
 
     // check if img is not dialog: screenshot return img with 1 channel (grayscale)
     if (img.channels() != 1) {
+      std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
       continue;
     }
 
