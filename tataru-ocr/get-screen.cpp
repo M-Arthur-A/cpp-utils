@@ -134,14 +134,6 @@ void screenshot(cv::Mat &img, bool needDemo=false) {
     imshow("Result", img);
     cv::waitKey();
     */
-    cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(20,150));
-    if (color[0] != 201 | color[1] != 217 | color[2] != 226) {
-      // img.setTo(cv::Scalar::all(0)); // make all black
-      return;
-    }
-
-
-    screen.cleaner(img);
 
     if(!(i & 0b111111)) {
       if(needDemo) {
@@ -150,6 +142,15 @@ void screenshot(cv::Mat &img, bool needDemo=false) {
       break;
     }
   }
+
+  cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(20,150));
+  if (!((color[0] == 201) && (color[1] == 217) && (color[2] == 226))) {
+    // std::cout << color << std::endl;
+    // img.setTo(cv::Scalar::all(0)); // make all black
+    return;
+  }
+
+  screen.cleaner(img);
 
   if(needDemo) {
     // demontrate capture window

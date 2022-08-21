@@ -12,14 +12,14 @@ int main() {
 
   for(;;) {
     screenshot(img, false);
-    cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(20,150));
-    if (color[0] != 201 | color[1] != 217 | color[2] != 226) {
-      std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
+
+    // check if img is not dialog: screenshot return img with 1 channel (grayscale)
+    if (img.channels() != 1) {
       continue;
     }
 
     OCRfromImg(ENGtext, img);
-    std::cout << ENGtext << std::endl;
+    // std::cout << ENGtext << std::endl;
 
     translate("ggl", ENGtext, previousENGtext);
 
