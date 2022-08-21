@@ -14,9 +14,8 @@ struct ScreenShot {
   XWindowAttributes window_attributes;
   Screen* screen;
   XImage* ximg;
-  XShmSegmentInfo shminfo;
   int x, y, width, height;
-  bool init;
+  int videoDialogShift = 0;
 
   ScreenShot(uint x, uint y, uint width, uint height, bool needDemo);
 

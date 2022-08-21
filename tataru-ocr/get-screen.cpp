@@ -39,7 +39,7 @@ struct ScreenShot{
     init = true;
     */
 
-    ximg = XGetImage(display, root, x, y, width, height, AllPlanes, ZPixmap);
+    ximg = XGetImage(display, root, x, y + videoDialogShift, width, height, AllPlanes, ZPixmap);
   }
 
     void operator() (cv::Mat& cv_img){
@@ -64,15 +64,15 @@ struct ScreenShot{
     cv::Mat botMask, upMask;
     cv::Mat cropBotMask, cropUpMask;
     cv::Mat croppedBot, croppedUp;
-    cv::threshold(cv_img, botMask, 50, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(cv_img, botMask, 30, 255, cv::THRESH_BINARY_INV);
     cv::threshold(cv_img, upMask, 230, 255, cv::THRESH_BINARY);
 
     cropBotMask = cv::Mat::zeros(cv_img.rows, cv_img.cols, CV_8U);
-    cropBotMask(cv::Rect(50,67,1000,160)) = 1;
+    cropBotMask(cv::Rect(50,67+videoDialogShift,1000,160)) = 1;
     botMask.copyTo(croppedBot, cropBotMask);
 
     cropUpMask = cv::Mat::zeros(cv_img.rows, cv_img.cols, CV_8U);
-    cropUpMask(cv::Rect(50,10,300,50)) = 1;
+    cropUpMask(cv::Rect(50,10+videoDialogShift,300,50)) = 1;
     upMask.copyTo(croppedUp, cropUpMask);
     // blend together
     // Convert Mat to float data type
@@ -120,6 +120,7 @@ struct ScreenShot{
   Screen* screen;
   XImage* ximg;
   int x, y, width, height;
+  int videoDialogShift = 0;
   /*
   XShmSegmentInfo shminfo;
   bool init;
@@ -154,11 +155,20 @@ void screenshot(cv::Mat &img, bool needDemo=false) {
     }
   }
 
+  // detect dialog / interactive dialog (without GUI)
   cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(20,150));
-  if (!((color[0] == 201) && (color[1] == 217) && (color[2] == 226))) {
+  if (!((color[0] == 201) && (color[1] == 217) && (color[2] == 226)) &&
+      !((color[0] == 202) && (color[1] == 219) && (color[2] == 228)) &&
+      !((color[0] == 199) && (color[1] == 216) && (color[2] == 231)) &&
+      !((color[0] == 105) && (color[1] == 113) && (color[2] == 115))) {
     // std::cout << color << std::endl;
     // img.setTo(cv::Scalar::all(0)); // make all black
     return;
+  }
+  if (((color[0] == 202) && (color[1] == 219) && (color[2] == 228)) |
+      ((color[0] == 199) && (color[1] == 216) && (color[2] == 231)) |
+      ((color[0] == 105) && (color[1] == 113) && (color[2] == 115))) {
+    screen.videoDialogShift = 23;
   }
 
   screen.cleaner(img);

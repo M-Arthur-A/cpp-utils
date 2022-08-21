@@ -11,7 +11,7 @@ int main() {
   cv::Mat img;
 
   for(;;) {
-    screenshot(img, false);
+    screenshot(img, true);
 
     // check if img is not dialog: screenshot return img with 1 channel (grayscale)
     if (img.channels() != 1) {
