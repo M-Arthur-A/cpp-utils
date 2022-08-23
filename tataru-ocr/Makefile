@@ -1,6 +1,6 @@
 # tataru helper linux analog
 
-CXX = clang #g++
+CXX = clang
 NAME = tataru
 EXE_PATH = ./bin
 EXE = -o $(EXE_PATH)/$(NAME)
