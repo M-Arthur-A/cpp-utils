@@ -1,4 +1,4 @@
-config:
+config: # preconfigged for 2560x1440
     Screenshot:
         position_coords:
             position_x: 730
