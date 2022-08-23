@@ -1,4 +1,4 @@
-# Tataru helper linux analog
-alpha version, WIP
+# Tataru helper linux cli analog
+alpha version
 
 Xorg screenshot -> openCV -> ggl translate

@@ -1,4 +1,5 @@
 #include "get-translate.h"
+#include "get-config.cpp"
 #include <cpr/api.h>
 #include <cpr/cpr.h>
 #include <iostream>
@@ -9,7 +10,9 @@
 void prepareQuery(std::string &query) {
   // NAME does not need translation
   auto PosNewLine = std::distance(query.begin(), std::find(query.begin(), query.end(), '\n'));
-  std::cout << query.substr(0, PosNewLine) << ": ";
+
+  std::cout << BOLDCYAN << query.substr(0, PosNewLine) << RESET << ": ";
+
   query = query.substr(PosNewLine+1, query.size());
   std::replace(query.begin(), query.end(), ' ', '+');
   std::replace(query.begin(), query.end(), '\n', '+');
@@ -21,8 +24,9 @@ void prepareQuery(std::string &query) {
   }
 }
 
-std::string gglTranslate(std::string &query) {
-  cpr::Response r = cpr::Get(cpr::Url{ "https://translate.google.com/m?sl=en&tl=ru&hl=ru&q=" + query},
+std::string gglTranslate(std::string &query, Config &config) {
+  cpr::Response r = cpr::Get(cpr::Url{ "https://translate.google.com/m?sl=" + config.translateLangFrom +
+                                       "&tl=" + config.translateLangTo + "&hl=" + config.translateLangTo + "&q=" + query},
                              cpr::Header{ { "User-Agent",
                                             "Opera/9.80 (Android; Opera Mini/11.0.1912/37.7549; U; pl) Presto/2.12.423 Version/12.16" },
                                           { "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" },
@@ -43,7 +47,7 @@ std::string gglTranslate(std::string &query) {
 
 
 
-void translate(std::string provider, std::string &query, std::string &queryPrevious) {
+void translate(std::string &query, std::string &queryPrevious, Config &config) {
   if (query != queryPrevious && !query.empty()) {
     queryPrevious = query;
   } else {
@@ -51,7 +55,7 @@ void translate(std::string provider, std::string &query, std::string &queryPrevi
   }
 
   prepareQuery(query);
-  if (provider == "ggl") {
-    std::cout << gglTranslate(query) << '\n'<< std::endl;
+  if (config.translator == "ggl") {
+    std::cout << gglTranslate(query, config) << '\n'<< std::endl;
   }
 }

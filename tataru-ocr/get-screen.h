@@ -1,4 +1,6 @@
 #pragma once
+
+#include "get-config.cpp"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XShm.h>
@@ -14,10 +16,9 @@ struct ScreenShot {
   XWindowAttributes window_attributes;
   Screen* screen;
   XImage* ximg;
-  int x, y, width, height;
-  int videoDialogShift = 0;
+  uint videoDialogShift;
 
-  ScreenShot(uint x, uint y, uint width, uint height, bool needDemo);
+  ScreenShot(Config &config);
 
   void operator() (cv::Mat& cv_img);
 
@@ -26,4 +27,4 @@ struct ScreenShot {
   ~ScreenShot();
 };
 
-void screenshot(cv::Mat &img, bool needDemo=false);
+void screenshot(cv::Mat &img, Config &config);
